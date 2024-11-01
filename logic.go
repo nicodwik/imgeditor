@@ -4,6 +4,7 @@ import (
 	"bytes"
 	"errors"
 	"image"
+	"image/color"
 	"image/draw"
 	"image/jpeg"
 	"image/png"
@@ -16,6 +17,7 @@ import (
 type Param struct {
 	FontSize       int
 	FontType       []byte
+	FontColor      color.Color
 	PosX           int
 	PosY           int
 	NewLineBorderX int
@@ -57,14 +59,8 @@ func (ie *Object) GenerateText(param *Param) (lastXPos, lastYPos int, err error)
 	newImg := image.NewRGBA(imageInput.Bounds())
 	draw.Draw(newImg, newImg.Rect, imageInput, image.Point{0, 0}, draw.Src)
 
-	// Parse the font
-	font, err := truetype.Parse(param.FontType)
-	if err != nil {
-		return 0, 0, err
-	}
-
-	ctx := createFontContextWithOptions(newImg, font, param)
-	fakeCtx := createFontContextWithOptions(fakeImg, font, param)
+	ctx, _ := createFontContextWithOptions(newImg, param)
+	fakeCtx, _ := createFontContextWithOptions(fakeImg, param)
 
 	lastXPos = param.PosX
 	lastYPos = param.PosY
@@ -136,15 +132,23 @@ func (ie *Object) WriteToFile(format string) ([]byte, error) {
 	return buff.Bytes(), nil
 }
 
-func createFontContextWithOptions(img *image.RGBA, font *truetype.Font, param *Param) *freetype.Context {
-	ctx := freetype.NewContext()
+func createFontContextWithOptions(img *image.RGBA, param *Param) (*freetype.Context, error) {
+	// Parse the font
+	font, err := truetype.Parse(param.FontType)
+	if err != nil {
+		return nil, err
+	}
 
+	// Parse the color
+	fontColor := image.NewUniform(param.FontColor)
+
+	ctx := freetype.NewContext()
 	ctx.SetDPI(150)
 	ctx.SetDst(img)
 	ctx.SetFont(font)
 	ctx.SetFontSize(float64(param.FontSize))
-	ctx.SetSrc(image.Black)
+	ctx.SetSrc(fontColor)
 	ctx.SetClip(img.Bounds())
 
-	return ctx
+	return ctx, nil
 }
