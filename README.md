@@ -93,48 +93,15 @@ func main() {
 		log.Fatal(err)
 	}
 
-	// send image as multipart/form-data
-	err = httpClientWithMultipart(fileBytes)
-	if err != nil {
-		log.Fatal(err)
-	}
+	fmt.Println(fileBytes)
 
-	fmt.Println("Send image success!")
-}
-
-func httpClientWithMultipart(fileBytes []byte) error {
-	buf := &bytes.Buffer{}
-	multipart := multipart.NewWriter(buf)
-
-	wri, err := multipart.CreateFormFile("image", "jancuk.jpg")
-	if err != nil {
-		return err
-	}
-
-	read := bytes.NewReader(fileBytes)
-	_, err = io.Copy(wri, read)
-	if err != nil {
-		return err
-	}
-	multipart.Close()
-
-	req, err := http.NewRequest("POST", "https://99f3-202-6-237-2.ngrok-free.app/api/test", buf)
-	req.Header.Add("Content-Type", multipart.FormDataContentType())
-	if err != nil {
-		return err
-	}
-	client := http.Client{}
-	client.Do(req)
-
-	return nil
+	fmt.Println("Edit image success!")
 }
 
 ```
 
 ## Output
-
-![Screenshot](https://nicodwik.github.io/totp-generator/screenshot.png)
-
+<img width="701" alt="image" src="https://github.com/user-attachments/assets/fc9ec372-ba87-43a2-9b34-ec39cbc08357">
 
 ## Feedback
 
