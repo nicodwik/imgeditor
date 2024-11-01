@@ -8,6 +8,7 @@ import (
 	"image/draw"
 	"image/jpeg"
 	"image/png"
+	"strconv"
 	"strings"
 
 	"github.com/golang/freetype"
@@ -34,6 +35,41 @@ func New(imageSrc []byte) *Object {
 	return &Object{
 		ImageSrc: imageSrc,
 	}
+}
+
+func HexToRGBA(hex string) color.RGBA {
+	// Remove the leading '#' if present
+	hex = strings.TrimPrefix(hex, "#")
+
+	// Handle short hex codes (e.g., #FFF)
+	if len(hex) == 3 {
+		hex = strings.Repeat(string(hex[0]), 2) + strings.Repeat(string(hex[1]), 2) + strings.Repeat(string(hex[2]), 2)
+	}
+
+	// Parse the hex string into integer values
+	r, err := strconv.ParseUint(hex[0:2], 16, 8)
+	if err != nil {
+		return color.RGBA{}
+	}
+	g, err := strconv.ParseUint(hex[2:4], 16, 8)
+	if err != nil {
+		return color.RGBA{}
+	}
+	b, err := strconv.ParseUint(hex[4:6], 16, 8)
+	if err != nil {
+		return color.RGBA{}
+	}
+	a := uint64(255) // Default alpha value
+
+	// Handle 8-digit hex codes (with alpha)
+	if len(hex) == 8 {
+		a, err = strconv.ParseUint(hex[6:8], 16, 8)
+		if err != nil {
+			return color.RGBA{}
+		}
+	}
+
+	return color.RGBA{R: uint8(r), G: uint8(g), B: uint8(b), A: uint8(a)}
 }
 
 func (ie *Object) GenerateText(param *Param) (lastXPos, lastYPos int, err error) {
