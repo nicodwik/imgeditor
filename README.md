@@ -9,18 +9,12 @@ Easily add text to your images with this powerful and flexible Go package.
 Generate text overlay in your image source
 
 ### struct `Param` 
-- `FontSize (int)`
-set font size
-- `FontType ([]byte)` 
-set font type, you can embed custom TTF file using `go embed`
-- `PosX (int)`
-set starting pixel point in horizontal scale
-- `PosY (int)`
-same with `PosX` but in vertical way
-- `NewLineBorder (int)`
-set the limit of pixel `PosX` to make new break line
-- `Text (string)`
-set text you want to be printed on image
+- `FontSize (int)` => set font size
+- `FontType ([]byte)` => set font type, you can embed custom TTF file using `go embed`
+- `PosX (int)` => set starting pixel point in horizontal scale
+- `PosY (int)` => same with `PosX` but in vertical way
+- `NewLineBorder (int)` => set the limit of pixel `PosX` to make new break line
+- `Text (string)` => set text you want to be printed on image
 
 ### function `writeToFile(format string)`
 Write edited image to file bytes
