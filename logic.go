@@ -129,7 +129,7 @@ func (ie *Object) GenerateText(param *Param) (lastXPos, lastYPos int, err error)
 		}
 
 		// if drawed string more than new line border Y, do nothing
-		if fakeP.Y.Round() >= newLineBorderY {
+		if p.Y.Round() >= newLineBorderY {
 			continue
 		}
 	}
