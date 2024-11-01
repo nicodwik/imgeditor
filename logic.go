@@ -14,12 +14,13 @@ import (
 )
 
 type Param struct {
-	FontSize      int
-	FontType      []byte
-	PosX          int
-	PosY          int
-	NewLineBorder int
-	Text          string
+	FontSize       int
+	FontType       []byte
+	PosX           int
+	PosY           int
+	NewLineBorderX int
+	NewLineBorderY int
+	Text           string
 }
 
 type Object struct {
@@ -74,10 +75,15 @@ func (ie *Object) GenerateText(param *Param) (lastXPos, lastYPos int, err error)
 		fakePos := freetype.Pt(lastXPos, lastYPos)
 		fakeP, _ := fakeCtx.DrawString(word+" ", fakePos)
 
-		// make a new line, if drawed string more than new line border
-		if fakeP.X.Round() >= param.NewLineBorder {
+		// if drawed string more than new line border X, make a new line
+		if fakeP.X.Round() >= param.NewLineBorderX {
 			lastXPos = param.PosX
 			lastYPos += 38
+		}
+
+		// if drawed string more than new line border Y, do nothing
+		if fakeP.Y.Round() >= param.NewLineBorderY {
+			continue
 		}
 
 		pos := freetype.Pt(lastXPos, lastYPos)
@@ -114,7 +120,7 @@ func (ie *Object) WriteToFile(format string) ([]byte, error) {
 			return []byte(""), err
 		}
 	default:
-		return []byte(""), errors.New("Unknow Format")
+		return []byte(""), errors.New("Unknown Format")
 	}
 
 	return buff.Bytes(), nil
