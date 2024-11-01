@@ -93,7 +93,8 @@ func main() {
 		log.Fatal(err)
 	}
 
-	fmt.Println(fileBytes)
+	now := time.Now().String()
+	os.WriteFile(now+".png", fileBytes, 0644)
 
 	fmt.Println("Edit image success!")
 }
