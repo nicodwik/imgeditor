@@ -32,7 +32,7 @@ Write edited image to file bytes
 ## Installation
 
 ```bash
-  go get github.com/yourusername/go-image-text
+  go get github.com/nicodwik/imgeditor
 ```
     
 ## Usage/Examples
