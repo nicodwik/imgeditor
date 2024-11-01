@@ -75,14 +75,24 @@ func (ie *Object) GenerateText(param *Param) (lastXPos, lastYPos int, err error)
 		fakePos := freetype.Pt(lastXPos, lastYPos)
 		fakeP, _ := fakeCtx.DrawString(word+" ", fakePos)
 
+		newLineBorderX := newImg.Bounds().Dx()
+		if param.NewLineBorderX != 0 {
+			newLineBorderX = param.NewLineBorderX
+		}
+
 		// if drawed string more than new line border X, make a new line
-		if fakeP.X.Round() >= param.NewLineBorderX {
+		if fakeP.X.Round() >= newLineBorderX {
 			lastXPos = param.PosX
 			lastYPos += 38
 		}
 
+		newLineBorderY := newImg.Bounds().Dy()
+		if param.NewLineBorderY != 0 {
+			newLineBorderY = param.NewLineBorderY
+		}
+
 		// if drawed string more than new line border Y, do nothing
-		if fakeP.Y.Round() >= param.NewLineBorderY {
+		if fakeP.Y.Round() >= newLineBorderY {
 			continue
 		}
 
