@@ -118,6 +118,11 @@ func (ie *Object) GenerateText(param *Param) (lastXPos, lastYPos int, err error)
 			lastYPos += 38
 		}
 
+		pos := freetype.Pt(lastXPos, lastYPos)
+		p, _ := ctx.DrawString(word+" ", pos)
+
+		lastXPos += (p.X.Round() - pos.X.Round())
+
 		newLineBorderY := newImg.Bounds().Dy()
 		if param.NewLineBorderY != 0 {
 			newLineBorderY = param.NewLineBorderY
@@ -127,11 +132,6 @@ func (ie *Object) GenerateText(param *Param) (lastXPos, lastYPos int, err error)
 		if fakeP.Y.Round() >= newLineBorderY {
 			continue
 		}
-
-		pos := freetype.Pt(lastXPos, lastYPos)
-		p, _ := ctx.DrawString(word+" ", pos)
-
-		lastXPos += (p.X.Round() - pos.X.Round())
 	}
 
 	ie.ImageOutput = newImg
