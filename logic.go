@@ -104,8 +104,7 @@ func (ie *Object) GenerateText(param *Param) (lastXPos, lastYPos int, err error)
 	// split text to slice of words
 	words := strings.Fields(param.Text)
 	for _, word := range words {
-		fakePos := freetype.Pt(lastXPos, lastYPos)
-		fakeP, _ := fakeCtx.DrawString(word+" ", fakePos)
+		fakeP, _ := fakeCtx.DrawString(word+" ", freetype.Pt(lastXPos, lastYPos))
 
 		newLineBorderX := newImg.Bounds().Dx()
 		if param.NewLineBorderX != 0 {
@@ -124,14 +123,14 @@ func (ie *Object) GenerateText(param *Param) (lastXPos, lastYPos int, err error)
 		}
 
 		// if drawed string more than new line border Y, do nothing
-		if fakeP.Y.Round() >= newLineBorderY {
-			continue
+		if lastYPos > newLineBorderY {
+			break
 		}
 
-		pos := freetype.Pt(lastXPos, lastYPos)
-		p, _ := ctx.DrawString(word+" ", pos)
+		p, _ := ctx.DrawString(word+" ", freetype.Pt(lastXPos, lastYPos))
 
-		lastXPos += (p.X.Round() - pos.X.Round())
+		lastXPos += (p.X.Round() - lastXPos)
+
 	}
 
 	ie.ImageOutput = newImg
