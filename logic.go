@@ -23,6 +23,7 @@ type Param struct {
 	PosY           int
 	NewLineBorderX int
 	NewLineBorderY int
+	LineHeight     int
 	Text           string
 }
 
@@ -106,18 +107,23 @@ func (ie *Object) GenerateText(param *Param) (lastXPos, lastYPos int, err error)
 	for _, word := range words {
 		fakeP, _ := fakeCtx.DrawString(word+" ", freetype.Pt(lastXPos, lastYPos))
 
-		newLineBorderX := newImg.Bounds().Dx()
+		newLineBorderX := newImg.Bounds().Dx() //default new line border X
 		if param.NewLineBorderX != 0 {
 			newLineBorderX = param.NewLineBorderX
 		}
 
 		// if drawed string more than new line border X, make a new line
 		if fakeP.X.Round() >= newLineBorderX {
+			lineHeight := 30 //default line height
+			if param.LineHeight != 0 {
+				lineHeight = param.LineHeight
+			}
+
 			lastXPos = param.PosX
-			lastYPos += 38
+			lastYPos += lineHeight
 		}
 
-		newLineBorderY := newImg.Bounds().Dy()
+		newLineBorderY := newImg.Bounds().Dy() //default new line border Y
 		if param.NewLineBorderY != 0 {
 			newLineBorderY = param.NewLineBorderY
 		}
