@@ -3,7 +3,6 @@ package imgeditor
 import (
 	"bytes"
 	"errors"
-	"fmt"
 	"image"
 	"image/color"
 	"image/draw"
@@ -102,8 +101,6 @@ func (ie *Object) GenerateText(param *Param) (lastXPos, lastYPos int, err error)
 
 	lastXPos = param.PosX
 	lastYPos = param.PosY
-
-	fmt.Println("test tagging")
 
 	// split text to slice of words
 	words := strings.Fields(param.Text)
